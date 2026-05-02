@@ -10,11 +10,8 @@ def generar_informe(estacion: dict) -> dict:
     latitud = estacion["latitud"]
     longitud = estacion["longitud"]
 
-    # Historico de clima para esta estacion
     df_clima = get_clima()
-    historico = df_clima.filter(
-        df_clima["cod_estacion"] == cod_estacion
-    )
+    historico = df_clima.filter(df_clima["cod_estacion"] == cod_estacion)
 
     temp_max_hist = 0.0
     prec_hist = 0.0
@@ -23,10 +20,8 @@ def generar_informe(estacion: dict) -> dict:
         temp_max_hist = round(historico["temp_max_C"].mean(), 1)
         prec_hist = round(historico["pc_precipitacion_mm"].mean(), 1)
 
-    # Clima de hoy desde Open-Meteo
     clima_hoy = obtener_clima_hoy(latitud, longitud)
 
-    # Comparacion
     diff_temp = round(clima_hoy["temp_max"] - temp_max_hist, 1)
     if diff_temp > 3:
         comparacion = "Temperatura por encima de lo normal para la epoca."
@@ -35,11 +30,8 @@ def generar_informe(estacion: dict) -> dict:
     else:
         comparacion = "Temperatura dentro del rango normal para la epoca."
 
-    # Datos agricolas del distrito
     df_agro = get_agro()
-    agro_distrito = df_agro.filter(
-        df_agro["Dist"] == distrito.upper()
-    )
+    agro_distrito = df_agro.filter(df_agro["Dist"] == distrito.upper())
 
     realidad_agricola = []
     if not agro_distrito.is_empty():
@@ -51,7 +43,6 @@ def generar_informe(estacion: dict) -> dict:
                 "precio_soles_kg": fila["MTO_PRECCHAC_soles_kg"]
             })
 
-    # Semaforo y consejo
     semaforo = generar_semaforo(clima_hoy, temp_max_hist, prec_hist)
     consejo = generar_consejo(semaforo, clima_hoy)
 
@@ -62,3 +53,10 @@ def generar_informe(estacion: dict) -> dict:
         "semaforo": semaforo,
         "clima_hoy": clima_hoy,
         "contexto_historico": {
+            "temp_max_promedio_historico": temp_max_hist,
+            "precipitacion_promedio_historico": prec_hist,
+            "comparacion": comparacion
+        },
+        "realidad_agricola": realidad_agricola,
+        "consejo": consejo
+    }
