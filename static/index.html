@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgroClima — Consulta Agroclimática</title>
+  <title>Nos Planét — Consulta Agroclimática</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
@@ -13,37 +13,37 @@
       --verde-oscuro: #1a3d1a;
       --verde-medio: #2d6a2d;
       --verde-claro: #4a9e4a;
-      --verde-suave: #e8f5e8;
-      --tierra: #8b5e3c;
-      --crema: #faf7f2;
-      --gris-texto: #2c2c2c;
+      --verde-suave: #eef6ee;
+      --crema: #faf8f4;
+      --gris-texto: #1e1e1e;
+      --gris-medio: #555;
       --gris-suave: #f0ede8;
-      --borde: #d8d0c4;
-      --sombra: 0 2px 12px rgba(26,61,26,0.10);
-      --radio: 10px;
+      --borde: #ddd8d0;
+      --sombra: 0 2px 16px rgba(26,61,26,0.09);
+      --radio: 12px;
+      --fuente: 'DM Sans', sans-serif;
+      --fuente-serif: 'Playfair Display', serif;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--fuente);
       background: var(--crema);
       color: var(--gris-texto);
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    /* HEADER */
-    header {
+    /* ══ HEADER ══ */
+    .header {
       background: var(--verde-oscuro);
       color: white;
-      padding: 18px 32px;
+      padding: 13px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      flex-shrink: 0;
     }
 
     .logo {
@@ -52,339 +52,355 @@
       gap: 12px;
     }
 
-    .logo-icono {
+    .logo-flor {
       width: 36px;
       height: 36px;
-      background: var(--verde-claro);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
+      flex-shrink: 0;
     }
 
     .logo-texto h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 22px;
-      letter-spacing: -0.3px;
-    }
-
-    .logo-texto p {
-      font-size: 11px;
-      opacity: 0.65;
-      font-weight: 300;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .header-estado {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      opacity: 0.75;
-    }
-
-    .dot-activo {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #4ade80;
-      animation: pulso 2s infinite;
-    }
-
-    @keyframes pulso {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    /* LAYOUT */
-    .app {
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      height: calc(100vh - 73px);
-    }
-
-    /* PANEL IZQUIERDO */
-    .panel {
-      background: white;
-      border-right: 1px solid var(--borde);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .panel-busqueda {
-      padding: 20px;
-      border-bottom: 1px solid var(--borde);
-      background: var(--verde-suave);
-    }
-
-    .panel-busqueda h2 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 16px;
-      color: var(--verde-oscuro);
-      margin-bottom: 14px;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 8px;
-      border: 1.5px solid var(--borde);
-      border-radius: 7px;
-      background: white;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      font-weight: 500;
-      color: #666;
-      cursor: pointer;
-      transition: all 0.18s;
-      text-align: center;
-    }
-
-    .tab.activo {
-      background: var(--verde-medio);
-      border-color: var(--verde-medio);
+      font-family: var(--fuente-serif);
+      font-size: 21px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
       color: white;
     }
 
-    .tab:hover:not(.activo) {
-      border-color: var(--verde-medio);
-      color: var(--verde-medio);
-    }
-
-    .form-grupo {
-      margin-bottom: 10px;
-    }
-
-    .form-grupo label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--verde-oscuro);
+    .logo-texto p {
+      font-size: 10px;
+      opacity: 0.55;
+      font-weight: 300;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 5px;
+      margin-top: 1px;
     }
 
-    .form-grupo input, .form-grupo select {
-      width: 100%;
-      padding: 9px 12px;
-      border: 1.5px solid var(--borde);
-      border-radius: 7px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
+    .api-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      opacity: 0.65;
+      font-weight: 300;
+    }
+
+    .dot {
+      width: 7px; height: 7px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulso 2s infinite;
+    }
+
+    @keyframes pulso { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ══════════════════════════════
+       PANTALLA 1 — INICIO
+    ══════════════════════════════ */
+    #pantalla-inicio {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .barra-busqueda {
       background: white;
+      border-bottom: 1px solid var(--borde);
+      padding: 13px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .barra-busqueda label {
+      font-size: 12px;
+      color: var(--gris-medio);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .input-grupo {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .input-grupo input {
+      padding: 8px 13px;
+      border: 1.5px solid var(--borde);
+      border-radius: 8px;
+      font-family: var(--fuente);
+      font-size: 13px;
+      width: 148px;
+      background: var(--crema);
       color: var(--gris-texto);
       transition: border-color 0.18s;
     }
 
-    .form-grupo input:focus, .form-grupo select:focus {
+    .input-grupo input:focus {
       outline: none;
       border-color: var(--verde-medio);
+      background: white;
     }
 
-    .btn-consultar {
-      width: 100%;
-      padding: 11px;
+    .btn {
+      padding: 8px 16px;
       background: var(--verde-medio);
       color: white;
       border: none;
       border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
+      font-family: var(--fuente);
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.18s;
-      margin-top: 4px;
+      white-space: nowrap;
     }
 
-    .btn-consultar:hover { background: var(--verde-oscuro); }
+    .btn:hover { background: var(--verde-oscuro); }
 
-    .btn-gps {
-      width: 100%;
-      padding: 11px;
+    .btn.secundario {
       background: white;
       color: var(--verde-medio);
       border: 1.5px solid var(--verde-medio);
-      border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.18s;
+    }
+
+    .btn.secundario:hover { background: var(--verde-suave); }
+
+    .sep-vertical {
+      width: 1px;
+      height: 26px;
+      background: var(--borde);
+    }
+
+    .mapa-wrapper {
+      flex: 1;
+      position: relative;
+    }
+
+    #mapa {
+      width: 100%;
+      height: 100%;
+    }
+
+    .instruccion-mapa {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(26,61,26,0.85);
+      color: white;
+      padding: 9px 20px;
+      border-radius: 22px;
+      font-size: 12px;
+      font-weight: 400;
+      z-index: 500;
+      pointer-events: none;
+      letter-spacing: 0.3px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ══════════════════════════════
+       PANTALLA 2 — RESULTADO
+    ══════════════════════════════ */
+    #pantalla-resultado {
+      display: none;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .header-resultado {
+      background: var(--verde-oscuro);
+      color: white;
+      padding: 13px 28px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
+      gap: 18px;
+      flex-shrink: 0;
     }
 
-    .btn-gps:hover {
-      background: var(--verde-suave);
+    .btn-volver {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: white;
+      padding: 7px 15px;
+      border-radius: 8px;
+      font-family: var(--fuente);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.18s;
+      white-space: nowrap;
     }
 
-    /* PANEL RESULTADOS */
-    .panel-resultado {
+    .btn-volver:hover { background: rgba(255,255,255,0.18); }
+
+    .btn-volver svg {
+      width: 14px; height: 14px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .header-res-info h2 {
+      font-family: var(--fuente-serif);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .header-res-info p {
+      font-size: 11px;
+      opacity: 0.55;
+      margin-top: 1px;
+      font-weight: 300;
+    }
+
+    .resultado-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 28px 32px;
+      background: var(--crema);
     }
 
-    .estado-inicial {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      text-align: center;
-      color: #999;
-      gap: 12px;
-    }
+    .resultado-scroll::-webkit-scrollbar { width: 5px; }
+    .resultado-scroll::-webkit-scrollbar-track { background: transparent; }
+    .resultado-scroll::-webkit-scrollbar-thumb { background: var(--borde); border-radius: 10px; }
 
-    .estado-inicial .icono-grande {
-      font-size: 48px;
-      opacity: 0.3;
-    }
-
-    .estado-inicial p {
-      font-size: 13px;
-      max-width: 220px;
-      line-height: 1.5;
-    }
-
-    .cargando {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      gap: 14px;
-      color: #888;
-    }
-
-    .spinner {
-      width: 32px;
-      height: 32px;
-      border: 3px solid var(--borde);
-      border-top-color: var(--verde-medio);
-      border-radius: 50%;
-      animation: girar 0.8s linear infinite;
-    }
-
-    @keyframes girar { to { transform: rotate(360deg); } }
-
-    .error-msg {
-      display: none;
-      background: #fff0f0;
-      border: 1.5px solid #ffcdd2;
-      border-radius: 8px;
-      padding: 14px;
-      font-size: 13px;
-      color: #c62828;
-    }
-
-    /* RESULTADO */
-    .resultado {
-      display: none;
-      flex-direction: column;
+    .grid {
+      max-width: 940px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
 
-    .semaforo-card {
+    /* SEMAFORO */
+    .card-semaforo {
+      grid-column: 1 / -1;
       border-radius: var(--radio);
-      padding: 18px;
+      padding: 20px 26px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 18px;
+      border: 2px solid transparent;
     }
 
-    .semaforo-card.VERDE { background: #e8f5e9; border: 1.5px solid #a5d6a7; }
-    .semaforo-card.AMARILLO { background: #fffde7; border: 1.5px solid #fff176; }
-    .semaforo-card.ROJO { background: #ffebee; border: 1.5px solid #ef9a9a; }
+    .card-semaforo.VERDE    { background: #e8f5e9; border-color: #a5d6a7; }
+    .card-semaforo.AMARILLO { background: #fffde7; border-color: #ffe082; }
+    .card-semaforo.ROJO     { background: #ffebee; border-color: #ef9a9a; }
 
     .semaforo-circulo {
-      width: 48px;
-      height: 48px;
+      width: 52px; height: 52px;
       border-radius: 50%;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
     }
 
-    .VERDE .semaforo-circulo { background: #2e7d32; }
-    .AMARILLO .semaforo-circulo { background: #f57f17; }
-    .ROJO .semaforo-circulo { background: #c62828; }
+    .semaforo-circulo svg {
+      width: 24px; height: 24px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
-    .semaforo-info h3 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 18px;
+    .VERDE    .semaforo-circulo { background: #2e7d32; }
+    .AMARILLO .semaforo-circulo { background: #f57f17; }
+    .ROJO     .semaforo-circulo { background: #c62828; }
+
+    .semaforo-info h2 {
+      font-family: var(--fuente-serif);
+      font-size: 24px;
       color: var(--gris-texto);
     }
 
     .semaforo-info p {
       font-size: 12px;
-      color: #666;
-      margin-top: 2px;
+      color: var(--gris-medio);
+      margin-top: 3px;
     }
 
-    .tarjeta {
+    .semaforo-badge {
+      margin-left: auto;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .VERDE    .semaforo-badge { background: #2e7d32; color: white; }
+    .AMARILLO .semaforo-badge { background: #f57f17; color: white; }
+    .ROJO     .semaforo-badge { background: #c62828; color: white; }
+
+    /* CARDS */
+    .card {
       background: white;
       border: 1px solid var(--borde);
       border-radius: var(--radio);
-      padding: 16px;
+      padding: 20px 22px;
       box-shadow: var(--sombra);
     }
 
-    .tarjeta-titulo {
-      font-size: 11px;
+    .card-full { grid-column: 1 / -1; }
+
+    .card-titulo {
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 1.2px;
       color: var(--verde-medio);
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--gris-suave);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--gris-suave);
     }
 
-    .fila-dato {
+    .fila {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 6px 0;
+      padding: 8px 0;
       border-bottom: 1px solid var(--gris-suave);
-      font-size: 13px;
+      font-size: 13.5px;
     }
 
-    .fila-dato:last-child { border-bottom: none; }
-    .fila-dato span:first-child { color: #666; }
-    .fila-dato span:last-child { font-weight: 600; }
+    .fila:last-child { border-bottom: none; }
+    .fila span:first-child { color: var(--gris-medio); }
+    .fila span:last-child { font-weight: 600; }
 
-    .comparacion-texto {
-      margin-top: 10px;
+    .comparacion-txt {
+      margin-top: 12px;
       font-size: 12px;
-      color: #555;
+      color: var(--gris-medio);
       font-style: italic;
-      line-height: 1.5;
+      line-height: 1.65;
+      background: var(--gris-suave);
+      padding: 10px 14px;
+      border-radius: 8px;
     }
 
-    /* FILTRO CULTIVOS */
-    .filtro-cultivos {
+    /* CULTIVOS */
+    .filtros {
       display: flex;
-      gap: 6px;
+      gap: 7px;
       flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
-    .chip-cultivo {
-      padding: 5px 12px;
+    .chip {
+      padding: 5px 14px;
       border: 1.5px solid var(--borde);
       border-radius: 20px;
       font-size: 11px;
@@ -392,24 +408,25 @@
       cursor: pointer;
       transition: all 0.15s;
       background: white;
-      color: #666;
+      color: var(--gris-medio);
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.4px;
+      font-family: var(--fuente);
     }
 
-    .chip-cultivo.activo {
+    .chip.activo {
       background: var(--verde-medio);
       border-color: var(--verde-medio);
       color: white;
     }
 
-    .chip-cultivo:hover:not(.activo) {
+    .chip:hover:not(.activo) {
       border-color: var(--verde-medio);
       color: var(--verde-medio);
     }
 
     .cultivo-item {
-      padding: 10px 0;
+      padding: 11px 0;
       border-bottom: 1px solid var(--gris-suave);
     }
 
@@ -417,428 +434,396 @@
 
     .cultivo-nombre {
       font-weight: 600;
-      font-size: 13px;
-      margin-bottom: 4px;
+      font-size: 13.5px;
       color: var(--verde-oscuro);
+      margin-bottom: 6px;
     }
 
     .cultivo-datos {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
-    .cultivo-dato {
-      font-size: 11px;
-      color: #666;
+    .cultivo-tag {
+      font-size: 11.5px;
+      color: var(--gris-medio);
       background: var(--gris-suave);
-      padding: 3px 8px;
-      border-radius: 4px;
+      padding: 3px 10px;
+      border-radius: 6px;
     }
 
-    .cultivo-dato strong {
-      color: var(--gris-texto);
-    }
+    .cultivo-tag strong { color: var(--gris-texto); }
 
     .consejo-box {
       background: var(--verde-suave);
       border-left: 4px solid var(--verde-medio);
-      border-radius: 0 8px 8px 0;
-      padding: 14px;
-      font-size: 13px;
-      line-height: 1.65;
+      border-radius: 0 10px 10px 0;
+      padding: 16px 20px;
+      font-size: 13.5px;
+      line-height: 1.75;
       color: var(--verde-oscuro);
     }
 
-    /* MAPA */
-    #mapa {
-      width: 100%;
-      height: 100%;
-      z-index: 1;
+    /* OVERLAY CARGANDO */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(250,248,244,0.88);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px;
+      backdrop-filter: blur(3px);
     }
 
-    /* POPUP MAPA */
+    .spinner {
+      width: 38px; height: 38px;
+      border: 3px solid var(--borde);
+      border-top-color: var(--verde-medio);
+      border-radius: 50%;
+      animation: girar 0.7s linear infinite;
+    }
+
+    @keyframes girar { to { transform: rotate(360deg); } }
+
+    .overlay p { font-size: 13px; color: var(--gris-medio); }
+
+    /* POPUP LEAFLET */
     .leaflet-popup-content-wrapper {
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      font-family: 'DM Sans', sans-serif;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.14);
+      font-family: var(--fuente);
+      padding: 0;
     }
 
-    .popup-mapa {
+    .leaflet-popup-content { margin: 0; }
+
+    .popup-inner {
+      padding: 16px 18px;
       text-align: center;
-      padding: 4px;
+      min-width: 158px;
     }
 
-    .popup-mapa h3 {
-      font-family: 'DM Serif Display', serif;
+    .popup-inner h3 {
+      font-family: var(--fuente-serif);
       font-size: 15px;
       color: var(--verde-oscuro);
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
-    .popup-mapa p {
+    .popup-inner p {
       font-size: 11px;
-      color: #888;
-      margin-bottom: 10px;
+      color: #aaa;
+      margin-bottom: 12px;
     }
 
     .popup-btn {
       display: block;
       width: 100%;
-      padding: 8px;
+      padding: 9px;
       background: var(--verde-medio);
       color: white;
       border: none;
-      border-radius: 6px;
-      font-family: 'DM Sans', sans-serif;
+      border-radius: 8px;
+      font-family: var(--fuente);
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
+      letter-spacing: 0.2px;
     }
 
     .popup-btn:hover { background: var(--verde-oscuro); }
 
-    /* OCULTAR TABS */
-    .tab-content { display: none; }
-    .tab-content.activo { display: block; }
-
-    /* SCROLLBAR */
-    .panel-resultado::-webkit-scrollbar { width: 5px; }
-    .panel-resultado::-webkit-scrollbar-track { background: transparent; }
-    .panel-resultado::-webkit-scrollbar-thumb { background: var(--borde); border-radius: 10px; }
+    @media (max-width: 680px) {
+      .grid { grid-template-columns: 1fr; }
+      .card-semaforo, .card-full { grid-column: 1; }
+      .resultado-scroll { padding: 16px; }
+      .barra-busqueda { padding: 10px 16px; }
+    }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">
-    <div class="logo-icono">🌱</div>
-    <div class="logo-texto">
-      <h1>AgroClima</h1>
-      <p>Consulta agroclimática · Perú</p>
-    </div>
-  </div>
-  <div class="header-estado">
-    <div class="dot-activo"></div>
-    API activa
-  </div>
-</header>
+<!-- OVERLAY CARGANDO -->
+<div class="overlay" id="overlay">
+  <div class="spinner"></div>
+  <p>Consultando datos agroclimáticos...</p>
+</div>
 
-<div class="app">
+<!-- ══════════════════════════════════
+     PANTALLA 1 — INICIO
+══════════════════════════════════ -->
+<div id="pantalla-inicio" style="display:flex;flex-direction:column;height:100vh;">
 
-  <!-- PANEL IZQUIERDO -->
-  <div class="panel">
-    <div class="panel-busqueda">
-      <h2>Consultar distrito</h2>
-
-      <div class="tabs">
-        <button class="tab activo" onclick="cambiarTab('mapa')">🗺️ Mapa</button>
-        <button class="tab" onclick="cambiarTab('distrito')">🔍 Distrito</button>
-        <button class="tab" onclick="cambiarTab('gps')">📍 Mi ubicación</button>
-      </div>
-
-      <!-- TAB MAPA -->
-      <div class="tab-content activo" id="tab-mapa">
-        <p style="font-size:12px;color:#666;line-height:1.5;">Haz clic en un marcador del mapa para consultar ese distrito.</p>
-      </div>
-
-      <!-- TAB DISTRITO -->
-      <div class="tab-content" id="tab-distrito">
-        <div class="form-grupo">
-          <label>Departamento</label>
-          <input type="text" id="departamento" placeholder="Ej: LAMBAYEQUE" />
-        </div>
-        <div class="form-grupo">
-          <label>Provincia</label>
-          <input type="text" id="provincia" placeholder="Ej: CHICLAYO" />
-        </div>
-        <div class="form-grupo">
-          <label>Distrito</label>
-          <input type="text" id="distrito" placeholder="Ej: CHICLAYO" />
-        </div>
-        <button class="btn-consultar" onclick="consultarPorDistrito()">Consultar</button>
-      </div>
-
-      <!-- TAB GPS -->
-      <div class="tab-content" id="tab-gps">
-        <p style="font-size:12px;color:#666;line-height:1.5;margin-bottom:12px;">Usa tu ubicación actual para encontrar la estación más cercana.</p>
-        <button class="btn-gps" onclick="consultarPorGPS()">
-          <span>📍</span> Usar mi ubicación
-        </button>
+  <header class="header">
+    <div class="logo">
+      <!-- FLOR SVG -->
+      <svg class="logo-flor" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="5" fill="#4ade80"/>
+        <ellipse cx="18" cy="8" rx="4" ry="6" fill="#86efac" opacity="0.85"/>
+        <ellipse cx="18" cy="28" rx="4" ry="6" fill="#86efac" opacity="0.85"/>
+        <ellipse cx="8" cy="18" rx="6" ry="4" fill="#86efac" opacity="0.85"/>
+        <ellipse cx="28" cy="18" rx="6" ry="4" fill="#86efac" opacity="0.85"/>
+        <ellipse cx="11" cy="11" rx="4" ry="6" fill="#4ade80" opacity="0.65" transform="rotate(-45 11 11)"/>
+        <ellipse cx="25" cy="11" rx="4" ry="6" fill="#4ade80" opacity="0.65" transform="rotate(45 25 11)"/>
+        <ellipse cx="11" cy="25" rx="4" ry="6" fill="#4ade80" opacity="0.65" transform="rotate(45 11 25)"/>
+        <ellipse cx="25" cy="25" rx="4" ry="6" fill="#4ade80" opacity="0.65" transform="rotate(-45 25 25)"/>
+        <circle cx="18" cy="18" r="4" fill="white"/>
+      </svg>
+      <div class="logo-texto">
+        <h1>Nos Planét</h1>
+        <p>Consulta agroclimática · Perú</p>
       </div>
     </div>
-
-    <!-- RESULTADO -->
-    <div class="panel-resultado">
-
-      <div class="estado-inicial" id="estado-inicial">
-        <div class="icono-grande">🌾</div>
-        <p>Selecciona un distrito en el mapa o usa el buscador para ver el informe agroclimático.</p>
-      </div>
-
-      <div class="cargando" id="cargando">
-        <div class="spinner"></div>
-        <p style="font-size:13px;">Consultando datos...</p>
-      </div>
-
-      <div class="error-msg" id="error-msg"></div>
-
-      <div class="resultado" id="resultado">
-
-        <div class="semaforo-card" id="semaforo-card">
-          <div class="semaforo-circulo" id="semaforo-icono"></div>
-          <div class="semaforo-info">
-            <h3 id="res-distrito"></h3>
-            <p id="res-meta"></p>
-          </div>
-        </div>
-
-        <div class="tarjeta">
-          <div class="tarjeta-titulo">Clima de hoy</div>
-          <div class="fila-dato"><span>Temperatura máxima</span><span id="res-tmax"></span></div>
-          <div class="fila-dato"><span>Temperatura mínima</span><span id="res-tmin"></span></div>
-          <div class="fila-dato"><span>Precipitación</span><span id="res-prec"></span></div>
-          <div class="fila-dato"><span>Humedad relativa</span><span id="res-hum"></span></div>
-        </div>
-
-        <div class="tarjeta">
-          <div class="tarjeta-titulo">Contexto histórico</div>
-          <div class="fila-dato"><span>Temp. máx. promedio histórico</span><span id="res-tmax-hist"></span></div>
-          <div class="fila-dato"><span>Precipitación promedio histórico</span><span id="res-prec-hist"></span></div>
-          <p class="comparacion-texto" id="res-comparacion"></p>
-        </div>
-
-        <div class="tarjeta">
-          <div class="tarjeta-titulo">Realidad agrícola</div>
-          <div class="filtro-cultivos" id="filtro-cultivos"></div>
-          <div id="lista-cultivos"></div>
-        </div>
-
-        <div class="tarjeta">
-          <div class="tarjeta-titulo">Consejo</div>
-          <div class="consejo-box" id="res-consejo"></div>
-        </div>
-
-      </div>
+    <div class="api-badge">
+      <div class="dot"></div>
+      API activa
     </div>
+  </header>
+
+  <div class="barra-busqueda">
+    <label>Buscar por distrito:</label>
+    <div class="input-grupo">
+      <input type="text" id="inp-dpto" placeholder="Departamento" />
+      <input type="text" id="inp-prov" placeholder="Provincia" />
+      <input type="text" id="inp-dist" placeholder="Distrito" />
+      <button class="btn" onclick="buscarPorDistrito()">Buscar</button>
+    </div>
+    <div class="sep-vertical"></div>
+    <button class="btn secundario" onclick="buscarPorGPS()">Usar mi ubicacion</button>
   </div>
 
-  <!-- MAPA -->
-  <div id="mapa"></div>
+  <div class="mapa-wrapper">
+    <div id="mapa"></div>
+    <div class="instruccion-mapa">Haz clic en un marcador para consultar ese distrito</div>
+  </div>
 
 </div>
 
+<!-- ══════════════════════════════════
+     PANTALLA 2 — RESULTADO
+══════════════════════════════════ -->
+<div id="pantalla-resultado" style="display:none;flex-direction:column;height:100vh;">
+
+  <header class="header-resultado">
+    <button class="btn-volver" onclick="volverAlMapa()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver al mapa
+    </button>
+    <div class="header-res-info">
+      <h2 id="res-titulo">—</h2>
+      <p id="res-subtitulo">—</p>
+    </div>
+  </header>
+
+  <div class="resultado-scroll">
+    <div class="grid">
+
+      <div class="card-semaforo" id="card-semaforo">
+        <div class="semaforo-circulo" id="semaforo-circulo">
+          <svg id="semaforo-svg" viewBox="0 0 24 24"></svg>
+        </div>
+        <div class="semaforo-info">
+          <h2 id="res-distrito"></h2>
+          <p id="res-estacion"></p>
+        </div>
+        <div class="semaforo-badge" id="semaforo-badge"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">Clima de hoy</div>
+        <div class="fila"><span>Temperatura maxima</span><span id="res-tmax"></span></div>
+        <div class="fila"><span>Temperatura minima</span><span id="res-tmin"></span></div>
+        <div class="fila"><span>Precipitacion</span><span id="res-prec"></span></div>
+        <div class="fila"><span>Humedad relativa</span><span id="res-hum"></span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">Contexto historico</div>
+        <div class="fila"><span>Temp. max. promedio historico</span><span id="res-tmax-hist"></span></div>
+        <div class="fila"><span>Precipitacion promedio historico</span><span id="res-prec-hist"></span></div>
+        <div class="comparacion-txt" id="res-comparacion"></div>
+      </div>
+
+      <div class="card card-full">
+        <div class="card-titulo">Realidad agricola del distrito</div>
+        <div class="filtros" id="filtros"></div>
+        <div id="lista-cultivos"></div>
+      </div>
+
+      <div class="card card-full">
+        <div class="card-titulo">Consejo para el agricultor</div>
+        <div class="consejo-box" id="res-consejo"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
-  // ─── CONFIG ───
   const API_URL = window.location.origin;
 
-  // Estaciones disponibles con coordenadas
   const ESTACIONES = [
-    { nombre: "CHICLAYO", departamento: "LAMBAYEQUE", provincia: "CHICLAYO", distrito: "CHICLAYO", lat: -6.7714, lon: -79.8409 },
-    { nombre: "FERREÑAFE", departamento: "LAMBAYEQUE", provincia: "FERREÑAFE", distrito: "FERREÑAFE", lat: -6.6365, lon: -79.7936 },
-    { nombre: "INCAHUASI", departamento: "LAMBAYEQUE", provincia: "FERREÑAFE", distrito: "INCAHUASI", lat: -6.2333, lon: -79.3167 },
-    { nombre: "PIURA", departamento: "PIURA", provincia: "PIURA", distrito: "PIURA", lat: -5.1945, lon: -80.6328 },
-    { nombre: "CAJAMARCA", departamento: "CAJAMARCA", provincia: "CAJAMARCA", distrito: "CAJAMARCA", lat: -7.1637, lon: -78.5001 },
+    { nombre:"CHICLAYO",  dpto:"LAMBAYEQUE", prov:"CHICLAYO",  dist:"CHICLAYO",  lat:-6.7714, lon:-79.8409 },
+    { nombre:"FERRENAFE", dpto:"LAMBAYEQUE", prov:"FERRENAFE", dist:"FERRENAFE", lat:-6.6365, lon:-79.7936 },
+    { nombre:"INCAHUASI", dpto:"LAMBAYEQUE", prov:"FERRENAFE", dist:"INCAHUASI", lat:-6.2333, lon:-79.3167 },
+    { nombre:"PIURA",     dpto:"PIURA",      prov:"PIURA",     dist:"PIURA",     lat:-5.1945, lon:-80.6328 },
+    { nombre:"CAJAMARCA", dpto:"CAJAMARCA",  prov:"CAJAMARCA", dist:"CAJAMARCA", lat:-7.1637, lon:-78.5001 },
   ];
 
+  let cultivoActivo = null;
   let todosLosCultivos = [];
-  let cultivoSeleccionado = null;
 
-  // ─── MAPA ───
-  const mapa = L.map('mapa', {
-    center: [-7.5, -76.5],
-    zoom: 6,
-    zoomControl: true
-  });
-
+  // MAPA
+  const mapa = L.map('mapa', { center:[-7.0,-78.5], zoom:6 });
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 18
+    attribution:'© OpenStreetMap contributors', maxZoom:18
   }).addTo(mapa);
 
-  // Icono personalizado verde
-  const iconoEstacion = L.divIcon({
-    className: '',
-    html: `<div style="
-      width:34px;height:34px;
-      background:#2d6a2d;
-      border:3px solid white;
-      border-radius:50% 50% 50% 0;
-      transform:rotate(-45deg);
-      box-shadow:0 2px 8px rgba(0,0,0,0.3);
-    "></div>`,
-    iconSize: [34, 34],
-    iconAnchor: [17, 34],
-    popupAnchor: [0, -36]
+  const icono = L.divIcon({
+    className:'',
+    html:`<div style="width:30px;height:30px;background:#2d6a2d;border:3px solid white;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 3px 10px rgba(0,0,0,0.22);cursor:pointer;"></div>`,
+    iconSize:[30,30], iconAnchor:[15,30], popupAnchor:[0,-34]
   });
 
-  // Agregar marcadores
-  ESTACIONES.forEach(est => {
-    const marker = L.marker([est.lat, est.lon], { icon: iconoEstacion }).addTo(mapa);
-    marker.bindPopup(`
-      <div class="popup-mapa">
-        <h3>${est.nombre}</h3>
-        <p>${est.departamento}</p>
-        <button class="popup-btn" onclick="consultarDesdePopup('${est.departamento}','${est.provincia}','${est.distrito}')">
-          Ver informe agroclimático
-        </button>
+  ESTACIONES.forEach(e => {
+    L.marker([e.lat,e.lon],{icon:icono}).addTo(mapa).bindPopup(`
+      <div class="popup-inner">
+        <h3>${e.nombre}</h3>
+        <p>${e.dpto}</p>
+        <button class="popup-btn" onclick="consultarDesdePopup('${e.dpto}','${e.prov}','${e.dist}')">Ver informe agroclimatico</button>
       </div>
     `);
   });
 
-  // ─── TABS ───
-  function cambiarTab(tab) {
-    document.querySelectorAll('.tab').forEach((t, i) => {
-      t.classList.toggle('activo', ['mapa','distrito','gps'][i] === tab);
-    });
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('activo'));
-    document.getElementById('tab-' + tab).classList.add('activo');
+  // NAVEGACION
+  function irAResultado() {
+    document.getElementById('pantalla-inicio').style.display = 'none';
+    const p = document.getElementById('pantalla-resultado');
+    p.style.display = 'flex';
   }
 
-  // ─── ESTADOS UI ───
-  function mostrarInicial() {
-    document.getElementById('estado-inicial').style.display = 'flex';
-    document.getElementById('cargando').style.display = 'none';
-    document.getElementById('error-msg').style.display = 'none';
-    document.getElementById('resultado').style.display = 'none';
+  function volverAlMapa() {
+    document.getElementById('pantalla-resultado').style.display = 'none';
+    document.getElementById('pantalla-inicio').style.display = 'flex';
+    setTimeout(()=>mapa.invalidateSize(),100);
   }
 
-  function mostrarCargando() {
-    document.getElementById('estado-inicial').style.display = 'none';
-    document.getElementById('cargando').style.display = 'flex';
-    document.getElementById('error-msg').style.display = 'none';
-    document.getElementById('resultado').style.display = 'none';
+  function cargando(v) {
+    document.getElementById('overlay').style.display = v ? 'flex' : 'none';
   }
 
-  function mostrarError(msg) {
-    document.getElementById('estado-inicial').style.display = 'none';
-    document.getElementById('cargando').style.display = 'none';
-    document.getElementById('error-msg').style.display = 'block';
-    document.getElementById('error-msg').textContent = msg;
-    document.getElementById('resultado').style.display = 'none';
+  // CONSULTAS
+  async function consultarDesdePopup(d,p,dist) { await _consultar(d,p,dist); }
+
+  async function buscarPorDistrito() {
+    const d = document.getElementById('inp-dpto').value.trim().toUpperCase();
+    const p = document.getElementById('inp-prov').value.trim().toUpperCase();
+    const dist = document.getElementById('inp-dist').value.trim().toUpperCase();
+    if (!d||!p||!dist) return alert('Completa los tres campos.');
+    await _consultar(d,p,dist);
   }
 
-  function mostrarResultado(data) {
-    document.getElementById('estado-inicial').style.display = 'none';
-    document.getElementById('cargando').style.display = 'none';
-    document.getElementById('error-msg').style.display = 'none';
-    document.getElementById('resultado').style.display = 'flex';
+  async function buscarPorGPS() {
+    if (!navigator.geolocation) return alert('Tu navegador no soporta geolocalizacion.');
+    cargando(true);
+    navigator.geolocation.getCurrentPosition(async pos => {
+      try {
+        const res = await fetch(API_URL+'/consulta/por-coordenadas',{
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({latitud:pos.coords.latitude,longitud:pos.coords.longitude})
+        });
+        cargando(false);
+        if (!res.ok) return alert('No se encontro estacion cercana.');
+        renderResultado(await res.json());
+        irAResultado();
+      } catch { cargando(false); alert('No se pudo conectar con el servidor.'); }
+    }, ()=>{ cargando(false); alert('No se pudo obtener tu ubicacion.'); });
+  }
 
-    // Semáforo
-    const card = document.getElementById('semaforo-card');
-    card.className = 'semaforo-card ' + data.semaforo;
-    const iconos = { VERDE: '✓', AMARILLO: '!', ROJO: '⚠' };
-    document.getElementById('semaforo-icono').textContent = iconos[data.semaforo] || '?';
+  async function _consultar(d,p,dist) {
+    cargando(true);
+    try {
+      const res = await fetch(API_URL+'/consulta/por-distrito',{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({departamento:d,provincia:p,distrito:dist})
+      });
+      cargando(false);
+      if (!res.ok) return alert('Distrito no encontrado. Verifica los datos.');
+      renderResultado(await res.json());
+      irAResultado();
+    } catch { cargando(false); alert('No se pudo conectar con el servidor.'); }
+  }
+
+  // RENDER
+  function renderResultado(data) {
+    document.getElementById('res-titulo').textContent = data.distrito;
+    document.getElementById('res-subtitulo').textContent = 'Estacion: '+data.estacion_referencia+' · '+data.fecha_consulta;
+
+    const card = document.getElementById('card-semaforo');
+    card.className = 'card-semaforo '+data.semaforo;
+
+    const svgPaths = {
+      VERDE:    '<polyline points="20 6 9 17 4 12"/>',
+      AMARILLO: '<line x1="12" y1="8" x2="12" y2="13"/><circle cx="12" cy="17" r="0.5" fill="white" stroke="white"/>',
+      ROJO:     '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'
+    };
+    document.getElementById('semaforo-svg').innerHTML = svgPaths[data.semaforo] || '';
     document.getElementById('res-distrito').textContent = data.distrito;
-    document.getElementById('res-meta').textContent = 'Estación: ' + data.estacion_referencia + ' · ' + data.fecha_consulta;
+    document.getElementById('res-estacion').textContent = 'Estacion de referencia: '+data.estacion_referencia;
+    document.getElementById('semaforo-badge').textContent = data.semaforo;
 
-    // Clima
-    document.getElementById('res-tmax').textContent = data.clima_hoy.temp_max + ' °C';
-    document.getElementById('res-tmin').textContent = data.clima_hoy.temp_min + ' °C';
-    document.getElementById('res-prec').textContent = data.clima_hoy.precipitacion_mm + ' mm';
-    document.getElementById('res-hum').textContent = data.clima_hoy.humedad_relativa + '%';
+    document.getElementById('res-tmax').textContent = data.clima_hoy.temp_max+' °C';
+    document.getElementById('res-tmin').textContent = data.clima_hoy.temp_min+' °C';
+    document.getElementById('res-prec').textContent = data.clima_hoy.precipitacion_mm+' mm';
+    document.getElementById('res-hum').textContent  = data.clima_hoy.humedad_relativa+'%';
 
-    // Histórico
-    document.getElementById('res-tmax-hist').textContent = data.contexto_historico.temp_max_promedio_historico + ' °C';
-    document.getElementById('res-prec-hist').textContent = data.contexto_historico.precipitacion_promedio_historico + ' mm';
+    document.getElementById('res-tmax-hist').textContent = data.contexto_historico.temp_max_promedio_historico+' °C';
+    document.getElementById('res-prec-hist').textContent = data.contexto_historico.precipitacion_promedio_historico+' mm';
     document.getElementById('res-comparacion').textContent = data.contexto_historico.comparacion;
 
-    // Cultivos
     todosLosCultivos = data.realidad_agricola;
-    cultivoSeleccionado = null;
+    cultivoActivo = null;
     renderFiltros();
     renderCultivos();
 
-    // Consejo
     document.getElementById('res-consejo').textContent = data.consejo;
   }
 
-  // ─── FILTROS CULTIVOS ───
   function renderFiltros() {
-    const div = document.getElementById('filtro-cultivos');
+    const div = document.getElementById('filtros');
     div.innerHTML = '';
-
-    const chipTodos = document.createElement('button');
-    chipTodos.className = 'chip-cultivo' + (cultivoSeleccionado === null ? ' activo' : '');
-    chipTodos.textContent = 'Todos';
-    chipTodos.onclick = () => { cultivoSeleccionado = null; renderFiltros(); renderCultivos(); };
-    div.appendChild(chipTodos);
-
-    todosLosCultivos.forEach(item => {
+    const todos = document.createElement('button');
+    todos.className = 'chip'+(cultivoActivo===null?' activo':'');
+    todos.textContent = 'Todos';
+    todos.onclick = ()=>{ cultivoActivo=null; renderFiltros(); renderCultivos(); };
+    div.appendChild(todos);
+    todosLosCultivos.forEach(c=>{
       const chip = document.createElement('button');
-      chip.className = 'chip-cultivo' + (cultivoSeleccionado === item.cultivo ? ' activo' : '');
-      chip.textContent = item.cultivo;
-      chip.onclick = () => { cultivoSeleccionado = item.cultivo; renderFiltros(); renderCultivos(); };
+      chip.className = 'chip'+(cultivoActivo===c.cultivo?' activo':'');
+      chip.textContent = c.cultivo;
+      chip.onclick = ()=>{ cultivoActivo=c.cultivo; renderFiltros(); renderCultivos(); };
       div.appendChild(chip);
     });
   }
 
   function renderCultivos() {
-    const div = document.getElementById('lista-cultivos');
-    const lista = cultivoSeleccionado
-      ? todosLosCultivos.filter(c => c.cultivo === cultivoSeleccionado)
-      : todosLosCultivos;
-
-    div.innerHTML = lista.map(item => `
+    const lista = cultivoActivo ? todosLosCultivos.filter(c=>c.cultivo===cultivoActivo) : todosLosCultivos;
+    document.getElementById('lista-cultivos').innerHTML = lista.map(c=>`
       <div class="cultivo-item">
-        <div class="cultivo-nombre">${item.cultivo}</div>
+        <div class="cultivo-nombre">${c.cultivo}</div>
         <div class="cultivo-datos">
-          <span class="cultivo-dato">Producción: <strong>${item.produccion_t} t</strong></span>
-          <span class="cultivo-dato">Cosecha: <strong>${item.cosecha_ha} ha</strong></span>
-          <span class="cultivo-dato">Precio: <strong>S/ ${item.precio_soles_kg}/kg</strong></span>
+          <span class="cultivo-tag">Produccion: <strong>${c.produccion_t} t</strong></span>
+          <span class="cultivo-tag">Cosecha: <strong>${c.cosecha_ha} ha</strong></span>
+          <span class="cultivo-tag">Precio: <strong>S/ ${c.precio_soles_kg}/kg</strong></span>
         </div>
       </div>
     `).join('');
   }
-
-  // ─── CONSULTAS ───
-  async function consultarDesdePopup(dpto, prov, dist) {
-    cambiarTab('mapa');
-    await _consultarPorDistrito(dpto, prov, dist);
-  }
-
-  async function consultarPorDistrito() {
-    const dpto = document.getElementById('departamento').value.trim().toUpperCase();
-    const prov = document.getElementById('provincia').value.trim().toUpperCase();
-    const dist = document.getElementById('distrito').value.trim().toUpperCase();
-    if (!dpto || !prov || !dist) return mostrarError('Completa los tres campos.');
-    await _consultarPorDistrito(dpto, prov, dist);
-  }
-
-  async function _consultarPorDistrito(dpto, prov, dist) {
-    mostrarCargando();
-    try {
-      const res = await fetch(API_URL + '/consulta/por-distrito', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ departamento: dpto, provincia: prov, distrito: dist })
-      });
-      if (!res.ok) return mostrarError('Distrito no encontrado. Verifica los datos.');
-      mostrarResultado(await res.json());
-    } catch {
-      mostrarError('No se pudo conectar con el servidor.');
-    }
-  }
-
-  async function consultarPorGPS() {
-    if (!navigator.geolocation) return mostrarError('Tu navegador no soporta geolocalización.');
-    mostrarCargando();
-    navigator.geolocation.getCurrentPosition(async pos => {
-      try {
-        const res = await fetch(API_URL + '/consulta/por-coordenadas', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ latitud: pos.coords.latitude, longitud: pos.coords.longitude })
-        });
-        if (!res.ok) return mostrarError('No se encontró estación cercana.');
-        mostrarResultado(await res.json());
-      } catch {
-        mostrarError('No se pudo conectar con el servidor.');
-      }
-    }, () => mostrarError('No se pudo obtener tu ubicación. Revisa los permisos.'));
-  }
 </script>
-
 </body>
 </html>
