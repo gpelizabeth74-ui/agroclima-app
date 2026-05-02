@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroClima - Consulta Agroclimática</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #222;
+        }
+
+        header {
+            background-color: #2d6a2d;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 { font-size: 24px; }
+        header p { font-size: 14px; margin-top: 5px; opacity: 0.85; }
+
+        .contenedor {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .tarjeta {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .tarjeta h2 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: #2d6a2d;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 4px;
+            color: #444;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2d6a2d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover { background-color: #245424; }
+
+        .semaforo {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .VERDE { background-color: #d4edda; color: #155724; }
+        .AMARILLO { background-color: #fff3cd; color: #856404; }
+        .ROJO { background-color: #f8d7da; color: #721c24; }
+
+        .fila-dato {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .fila-dato span:first-child { color: #555; }
+        .fila-dato span:last-child { font-weight: bold; }
+
+        .consejo {
+            background-color: #f0f7f0;
+            border-left: 4px solid #2d6a2d;
+            padding: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .cultivo-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .cultivo-nombre { font-weight: bold; margin-bottom: 4px; }
+        .cultivo-detalle { color: #555; }
+
+        #resultado { display: none; }
+        #error { display: none; color: #721c24; padding: 12px; background: #f8d7da; border-radius: 4px; }
+        #cargando { display: none; text-align: center; padding: 20px; color: #555; }
+
+        .url-config {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>AgroClima</h1>
+    <p>Consulta agroclimática para agricultores del Peru</p>
+</header>
+
+<div class="contenedor">
+
+    <div class="tarjeta">
+        <h2>Configuracion</h2>
+        <p class="url-config">URL de la API (cambiar segun el entorno)</p>
+        <input type="text" id="api-url" value="http://localhost:8000" />
+    </div>
+
+    <div class="tarjeta">
+        <h2>Buscar por Distrito</h2>
+        <label>Departamento</label>
+        <input type="text" id="departamento" placeholder="Ejemplo: LAMBAYEQUE" />
+        <label>Provincia</label>
+        <input type="text" id="provincia" placeholder="Ejemplo: CHICLAYO" />
+        <label>Distrito</label>
+        <input type="text" id="distrito" placeholder="Ejemplo: CHICLAYO" />
+        <button onclick="consultarPorDistrito()">Consultar</button>
+    </div>
+
+    <div class="tarjeta">
+        <h2>Buscar por Mi Ubicacion</h2>
+        <button onclick="consultarPorGPS()">Usar mi ubicacion actual</button>
+    </div>
+
+    <div id="cargando">Consultando datos, por favor espere...</div>
+    <div id="error"></div>
+
+    <div id="resultado">
+
+        <div class="tarjeta">
+            <h2>Situacion Actual</h2>
+            <div id="semaforo-badge"></div>
+            <div class="fila-dato"><span>Distrito</span><span id="res-distrito"></span></div>
+            <div class="fila-dato"><span>Estacion de referencia</span><span id="res-estacion"></span></div>
+            <div class="fila-dato"><span>Fecha de consulta</span><span id="res-fecha"></span></div>
+        </div>
+
+        <div class="tarjeta">
+            <h2>Clima de Hoy</h2>
+            <div class="fila-dato"><span>Temperatura maxima</span><span id="res-tmax"></span></div>
+            <div class="fila-dato"><span>Temperatura minima</span><span id="res-tmin"></span></div>
+            <div class="fila-dato"><span>Precipitacion</span><span id="res-prec"></span></div>
+            <div class="fila-dato"><span>Humedad relativa</span><span id="res-hum"></span></div>
+        </div>
+
+        <div class="tarjeta">
+            <h2>Contexto Historico</h2>
+            <div class="fila-dato"><span>Temperatura maxima promedio</span><span id="res-tmax-hist"></span></div>
+            <div class="fila-dato"><span>Precipitacion promedio</span><span id="res-prec-hist"></span></div>
+            <p style="margin-top:12px; font-size:14px; color:#555;" id="res-comparacion"></p>
+        </div>
+
+        <div class="tarjeta">
+            <h2>Realidad Agricola del Distrito</h2>
+            <div id="res-agro"></div>
+        </div>
+
+        <div class="tarjeta">
+            <h2>Consejo</h2>
+            <div class="consejo" id="res-consejo"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function getApiUrl() {
+        return document.getElementById("api-url").value.trim();
+    }
+
+    function mostrarCargando() {
+        document.getElementById("cargando").style.display = "block";
+        document.getElementById("resultado").style.display = "none";
+        document.getElementById("error").style.display = "none";
+    }
+
+    function mostrarError(mensaje) {
+        document.getElementById("cargando").style.display = "none";
+        document.getElementById("error").style.display = "block";
+        document.getElementById("error").textContent = mensaje;
+    }
+
+    function mostrarResultado(data) {
+        document.getElementById("cargando").style.display = "none";
+        document.getElementById("resultado").style.display = "block";
+
+        const badge = document.getElementById("semaforo-badge");
+        badge.textContent = data.semaforo;
+        badge.className = "semaforo " + data.semaforo;
+
+        document.getElementById("res-distrito").textContent = data.distrito;
+        document.getElementById("res-estacion").textContent = data.estacion_referencia;
+        document.getElementById("res-fecha").textContent = data.fecha_consulta;
+
+        document.getElementById("res-tmax").textContent = data.clima_hoy.temp_max + " C";
+        document.getElementById("res-tmin").textContent = data.clima_hoy.temp_min + " C";
+        document.getElementById("res-prec").textContent = data.clima_hoy.precipitacion_mm + " mm";
+        document.getElementById("res-hum").textContent = data.clima_hoy.humedad_relativa + "%";
+
+        document.getElementById("res-tmax-hist").textContent = data.contexto_historico.temp_max_promedio_historico + " C";
+        document.getElementById("res-prec-hist").textContent = data.contexto_historico.precipitacion_promedio_historico + " mm";
+        document.getElementById("res-comparacion").textContent = data.contexto_historico.comparacion;
+
+        const agroDiv = document.getElementById("res-agro");
+        agroDiv.innerHTML = "";
+        data.realidad_agricola.forEach(item => {
+            agroDiv.innerHTML += `
+                <div class="cultivo-item">
+                    <div class="cultivo-nombre">${item.cultivo}</div>
+                    <div class="cultivo-detalle">
+                        Produccion: ${item.produccion_t} t &nbsp;|&nbsp;
+                        Cosecha: ${item.cosecha_ha} ha &nbsp;|&nbsp;
+                        Precio: S/ ${item.precio_soles_kg} por kg
+                    </div>
+                </div>`;
+        });
+
+        document.getElementById("res-consejo").textContent = data.consejo;
+    }
+
+    async function consultarPorDistrito() {
+        const dpto = document.getElementById("departamento").value.trim();
+        const prov = document.getElementById("provincia").value.trim();
+        const dist = document.getElementById("distrito").value.trim();
+
+        if (!dpto || !prov || !dist) {
+            mostrarError("Por favor complete los tres campos: departamento, provincia y distrito.");
+            return;
+        }
+
+        mostrarCargando();
+
+        try {
+            const respuesta = await fetch(getApiUrl() + "/consulta/por-distrito", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    departamento: dpto.toUpperCase(),
+                    provincia: prov.toUpperCase(),
+                    distrito: dist.toUpperCase()
+                })
+            });
+
+            if (!respuesta.ok) {
+                mostrarError("Distrito no encontrado. Verifique los datos ingresados.");
+                return;
+            }
+
+            const data = await respuesta.json();
+            mostrarResultado(data);
+
+        } catch (e) {
+            mostrarError("No se pudo conectar con el servidor. Verifique la URL de la API.");
+        }
+    }
+
+    async function consultarPorGPS() {
+        if (!navigator.geolocation) {
+            mostrarError("Su navegador no soporta geolocalización.");
+            return;
+        }
+
+        mostrarCargando();
+
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            try {
+                const respuesta = await fetch(getApiUrl() + "/consulta/por-coordenadas", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        latitud: pos.coords.latitude,
+                        longitud: pos.coords.longitude
+                    })
+                });
+
+                if (!respuesta.ok) {
+                    mostrarError("No se encontro una estacion cercana a su ubicacion.");
+                    return;
+                }
+
+                const data = await respuesta.json();
+                mostrarResultado(data);
+
+            } catch (e) {
+                mostrarError("No se pudo conectar con el servidor. Verifique la URL de la API.");
+            }
+        }, () => {
+            mostrarError("No se pudo obtener su ubicacion. Verifique los permisos del navegador.");
+        });
+    }
+</script>
+
+</body>
+</html>
