@@ -1,0 +1,54 @@
+.header {
+  background: var(--verde-oscuro);
+  color: white;
+  padding: 13px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-flor {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.logo-texto h1 {
+  font-family: var(--fuente-serif);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: white;
+}
+
+.logo-texto p {
+  font-size: 10px;
+  opacity: 0.55;
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.api-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  opacity: 0.65;
+  font-weight: 300;
+}
+
+.dot {
+  width: 7px; height: 7px;
+  background: #4ade80;
+  border-radius: 50%;
+  animation: pulso 2s infinite;
+}
