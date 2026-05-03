@@ -7,7 +7,7 @@ function irAResultado() {
 function volverAlMapa() {
   document.getElementById('pantalla-resultado').style.display = 'none';
   document.getElementById('pantalla-inicio').style.display = 'flex';
-  setTimeout(() => mapa.invalidateSize(), 100);
+  setTimeout(() => mapaObj.invalidateSize(), 100);
 }
 
 function cargando(v) {
