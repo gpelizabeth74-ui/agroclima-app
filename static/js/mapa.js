@@ -1,9 +1,9 @@
-const mapa = L.map('mapa', { center: [-7.0, -78.5], zoom: 6 });
+const mapaObj = L.map('mapa', { center: [-7.0, -78.5], zoom: 6 });
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap contributors',
   maxZoom: 18
-}).addTo(mapa);
+}).addTo(mapaObj);
 
 const icono = L.divIcon({
   className: '',
@@ -21,14 +21,30 @@ const icono = L.divIcon({
   popupAnchor: [0, -34]
 });
 
-ESTACIONES.forEach(e => {
-  L.marker([e.lat, e.lon], { icon: icono }).addTo(mapa).bindPopup(`
-    <div class="popup-inner">
-      <h3>${e.nombre}</h3>
-      <p>${e.dpto}</p>
-      <button class="popup-btn" onclick="consultarDesdePopup('${e.dpto}','${e.prov}','${e.dist}')">
-        Ver informe agroclimatico
-      </button>
-    </div>
-  `);
-});
+let estacionesConDatos = [];
+
+async function cargarMarcadores() {
+  try {
+    const res = await fetch(API_URL + '/estaciones');
+    const data = await res.json();
+    estacionesConDatos = data;
+
+    data.forEach(e => {
+      L.marker([e.latitud, e.longitud], { icon: icono })
+        .addTo(mapaObj)
+        .bindPopup(`
+          <div class="popup-inner">
+            <h3>${e.distrito}</h3>
+            <p>${e.departamento}</p>
+            <button class="popup-btn" onclick="consultarDesdePopup('${e.departamento}','${e.provincia}','${e.distrito}')">
+              Ver informe agroclimatico
+            </button>
+          </div>
+        `);
+    });
+  } catch {
+    console.error('No se pudieron cargar los marcadores.');
+  }
+}
+
+cargarMarcadores();
