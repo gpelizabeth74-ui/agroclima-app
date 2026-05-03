@@ -41,7 +41,6 @@ async function buscarPorGPS() {
     const lat = pos.coords.latitude;
     const lon = pos.coords.longitude;
     const cercana = estacionMasCercana(lat, lon);
-
     cargando(false);
 
     if (!cercana) {
@@ -49,15 +48,13 @@ async function buscarPorGPS() {
       return;
     }
 
-    if (cercana.distanciaKm > DISTANCIA_MAXIMA_KM) {
-      const confirmar = confirm(
-        `No hay una estacion cerca de tu ubicacion actual.\n\n` +
-        `La estacion mas cercana es ${cercana.nombre} (${cercana.dpto}), ` +
-        `a ${cercana.distanciaKm} km de distancia.\n\n` +
-        `Deseas ver el informe de esa estacion?`
-      );
-      if (!confirmar) return;
-    }
+    const confirmar = confirm(
+      `Por el momento no contamos con datos de su distrito.\n\n` +
+      `Desea que lo llevemos a la estacion mas cercana?\n\n` +
+      `Estacion: ${cercana.nombre} — ${cercana.dpto}\n` +
+      `Distancia aproximada: ${cercana.distanciaKm} km`
+    );
+    if (!confirmar) return;
 
     await _consultar(cercana.dpto, cercana.prov, cercana.dist);
 
@@ -76,11 +73,36 @@ async function _consultar(d, p, dist) {
       body: JSON.stringify({ departamento: d, provincia: p, distrito: dist })
     });
     cargando(false);
-    if (!res.ok) return alert('Distrito no encontrado. Verifica los datos.');
+
+    if (!res.ok) {
+      const cercana = estacionMasCercanaPorNombre(d, p, dist);
+      let mensaje = 'Por el momento no contamos con datos de ese distrito.';
+      if (cercana) {
+        const confirmar = confirm(
+          `${mensaje}\n\n` +
+          `Desea que lo llevemos a la estacion mas cercana?\n\n` +
+          `Estacion: ${cercana.nombre} — ${cercana.dpto}\n` +
+          `Distrito: ${cercana.dist}`
+        );
+        if (confirmar) await _consultar(cercana.dpto, cercana.prov, cercana.dist);
+      } else {
+        alert(mensaje);
+      }
+      return;
+    }
+
     renderResultado(await res.json());
     irAResultado();
   } catch {
     cargando(false);
     alert('No se pudo conectar con el servidor.');
   }
+}
+
+function estacionMasCercanaPorNombre(dpto, prov, dist) {
+  // Busca primero en el mismo departamento
+  const mismoDepto = ESTACIONES.filter(e => e.dpto === dpto);
+  if (mismoDepto.length > 0) return mismoDepto[0];
+  // Si no hay, devuelve la primera disponible
+  return ESTACIONES[0] || null;
 }
